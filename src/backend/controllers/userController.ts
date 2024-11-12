@@ -1,21 +1,22 @@
 import { deleteUserById, findUserById, getUsers, saveNewUser } from "../models/userModel.js";
-import { DeleteResult } from "../types/DeleteResult.js";
+import { ApiResult } from "../types/ApiResult.js";
 import { User } from "../types/User.js";
+import { ApiResultGenerator } from "../utils/ApiResultGenerator.js";
 
 
-export async function newUser(user: User):Promise<string>{
-    try {
+export async function newUser(user: User):Promise<ApiResult>{
+    let apiResult: ApiResult;    
+    try{
         const result = await saveNewUser(user);
-        return result;
-    } catch (error:any){//TODO: quitar el any
-        if (error.code === "23505") {
-            const columnMatch = error.detail.match(/Key \((.*?)\)=/);
-            const columnName = columnMatch ? columnMatch[1] : 'campo';
-            return `El ${columnName} ya existe en la base de datos`;
+        apiResult =  ApiResultGenerator.postResult(result);
+    }  catch (error) {
+        if (error instanceof Error) {
+            apiResult =  ApiResultGenerator.postResult(error);
+        } else {
+            apiResult =  ApiResultGenerator.postResult(new Error('Error desconocido'));
         }
-        return error;
     }
-      
+    return apiResult;
 }
 
 export async function getAllUsers():Promise<string>{
@@ -28,7 +29,17 @@ export async function getUser(id:string):Promise<string>{
     return result;
 }
 
-export async function deleteUser(id:string):Promise<DeleteResult>{
-    const result = await deleteUserById(id);
-    return result;
+export async function deleteUser(id:string):Promise<ApiResult>{
+    let apiResult: ApiResult;    
+    try{
+        const result = await deleteUserById(id);
+        apiResult =  ApiResultGenerator.deleteResult(result);
+    }  catch (error) {
+        if (error instanceof Error) {
+            apiResult =  ApiResultGenerator.deleteResult(error);
+        } else {
+            apiResult =  ApiResultGenerator.deleteResult(new Error('Error desconocido'));
+        }
+    }
+    return apiResult;
 }
