@@ -30,3 +30,9 @@ export async function deleteUserById(id: string): Promise<QueryResult> {
         const result = await pool.query(queryString);
         return result;
 }   
+
+export async function updateUserById(user: User): Promise<QueryResult> {
+    const queryString = `UPDATE "user" SET "name" = '${user.name}', "first_surname" = '${user.first_surname}', "password" = '${user.password}', "email" = '${user.email}', "userName" = '${user.userName}' WHERE "id" = ${user.id}`;
+    const result = await pool.query(queryString);
+    return result;
+}   

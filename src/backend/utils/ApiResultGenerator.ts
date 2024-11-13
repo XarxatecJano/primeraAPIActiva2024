@@ -28,11 +28,11 @@ export class ApiResultGenerator{
                 message: `El ${columnName} ya existe en la base de datos`
             };
         } 
-        if (result instanceof Error && 'code' in result && result.code !== "23505") {
+        if (result instanceof Error && 'code' in result && result.code === 'ECONNREFUSED') {
             postResult = {
-                statusCode:500,
+                statusCode:503,
                 success: false,
-                message: `Error al insertar usuario: ${result.message}`
+                message: `El servicio de la base de datos no está disponible`
             };
         }
         return postResult;
@@ -46,11 +46,11 @@ export class ApiResultGenerator{
             message: `Error desconocido`
         };
 
-        if (result instanceof Error) {
+        if (result instanceof Error &&  'code' in result && result.code === 'ECONNREFUSED'){
            deleteResult =  {
-                statusCode: 500,
+                statusCode: 503,
                 success: false,
-                message: `Error al eliminar usuario: ${result.message}`
+                message: `El servicio de la base de datos no está disponible`
             };
         }
 
@@ -73,6 +73,53 @@ export class ApiResultGenerator{
         }
 
         return deleteResult;
+    }
+
+    static putResult(result: QueryResult | Error):ApiResult{
+        
+        let putResult: ApiResult = {
+            statusCode: 500,
+            success: false,
+            message: `Error desconocido`
+        };
+
+        if (result instanceof Error && 'code' in result && result.code === "23505") {
+            const detail = (result as any).detail;
+            const columnMatch = detail?.match(/Key \((.*?)\)=/);
+            const columnName = columnMatch ? columnMatch[1] : 'campo';
+            putResult = {
+                statusCode:409, 
+                success: false,
+                message: `El ${columnName} ya existe en la base de datos`
+            }
+        } else if (result instanceof Error &&  'code' in result && result.code === 'ECONNREFUSED') {
+
+            putResult =  {
+                statusCode: 503,
+                success: false,
+                message: `El servicio de la base de datos no está disponible`
+            };
+        }
+
+        if ('rowCount' in result) {
+            if (result.rowCount != null && result.rowCount > 0) {
+                putResult = {
+                    statusCode: 204,
+                    success: true,
+                    message: 'Usuario actualizado correctamente',
+                    rowsAffected: result.rowCount
+                };
+            } else {
+                putResult = {
+                    statusCode: 404,
+                    success: false,
+                    message: 'No se encontró el usuario',
+                    rowsAffected: 0
+                };
+            }
+        }
+
+        return putResult;
     }
     
 }
