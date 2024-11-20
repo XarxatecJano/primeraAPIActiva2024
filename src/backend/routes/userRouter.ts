@@ -30,7 +30,12 @@ userRouter.delete("/:id", validateNumericParams, async (req: Express.Request, re
 userRouter.put("/:id", validateNumericParams, async (req: Express.Request, res: Express.Response) => {  
   const user: User = {id: req.params.id, userName: req.body.username, name: req.body.name, first_surname: req.body.surname, email: req.body.email, password: req.body.password};
   const result: ApiResult = await updateUser(user);
-  res.status(result.statusCode).json({message: result.message});
+  if (result.statusCode==204){
+    res.redirect("http://localhost:3000/usersManagement.html");
+  } else {
+    res.status(result.statusCode).json({message: result.message});
+  }
+ 
 });
 
 export default userRouter;

@@ -7,4 +7,4 @@ const __dirname = path.dirname(__filename);
 
 const publicPath = path.join(__dirname, '../../public');  
 
-export { publicPath };
+export { publicPath, __dirname };
