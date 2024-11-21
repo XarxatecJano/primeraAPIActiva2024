@@ -7,13 +7,13 @@ import { ApiResult } from '../types/ApiResult.js';
 const userRouter = Express.Router();
 
 userRouter.get("/", async (req: Express.Request, res: Express.Response) => {
-    const result = await getAllUsers();
-    res.json(result);
+    const result:ApiResult = await getAllUsers();
+    res.status(result.statusCode).json(result.data);
   });
   
 userRouter.get("/:id", validateNumericParams, async (req: Express.Request, res: Express.Response) => {
-    const result = await getUser(req.params.id);
-    res.send(result);
+    const result:ApiResult = await getUser(req.params.id);
+    res.status(result.statusCode).json(result.data);
   });
  
 userRouter.post("/", async (req: Express.Request, res: Express.Response) => {

@@ -2,6 +2,31 @@ import { Query, QueryResult } from "pg";
 import { ApiResult } from "../types/ApiResult.js";
 
 export class ApiResultGenerator{
+
+    static getResult(result: QueryResult | Error):ApiResult{
+        let getResult: ApiResult = {
+            statusCode: 500,
+            success: false,
+            message: `Error desconocido`
+        };
+        if ('rows' in result && 'rowCount' in result && result.rowCount != null) {
+            getResult = {
+                statusCode: 200,
+                success: true,
+                message: 'Usuarios obtenidos correctamente',
+                rowsAffected: result.rowCount,
+                data: result.rows
+            };
+        }
+        if (result instanceof Error && 'code' in result && result.code === 'ECONNREFUSED') {
+            getResult = {
+                statusCode:503,
+                success: false,
+                message: `El servicio de la base de datos no está disponible`
+            };
+        }
+        return getResult;
+    }
     
     static postResult(result: QueryResult | Error):ApiResult{
      

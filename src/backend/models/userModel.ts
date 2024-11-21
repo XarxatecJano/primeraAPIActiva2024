@@ -6,8 +6,9 @@ import { User } from "../types/User.js";
 
 export async function saveNewUser(user:User):Promise<QueryResult>{
 
-        const queryString = `INSERT INTO "user" ("userName", "name", "first_surname", "password", "email") VALUES ('${user.userName}', '${user.name}', '${user.first_surname}', '${user.password}','${user.email}')`;
-        const result = await pool.query(queryString);
+        const queryString = `INSERT INTO "user" ("userName", "name", "first_surname", "password", "email") VALUES ($1, $2, $3, $4, $5)`;
+        const values = [user.userName, user.name, user.first_surname, user.password, user.email];
+        const result = await pool.query(queryString, values);
         return result;
    
 }
@@ -15,13 +16,13 @@ export async function saveNewUser(user:User):Promise<QueryResult>{
 export async function getUsers():Promise<any>{  
     const queryString = `SELECT * FROM "user"`;
     const result = await pool.query(queryString);
-    return result.rows;
+    return result;
 }
 
 export async function findUserById(id:string):Promise<any>{
     const queryString = `SELECT * FROM "user" WHERE "id" = ${id}`;
     const result = await pool.query(queryString);
-    return result.rows;
+    return result;
 }
 
 export async function deleteUserById(id: string): Promise<QueryResult> {
