@@ -20,5 +20,10 @@ staticRouter.get('/usersManagement', (req: Express.Request, res: Express.Respons
     res.sendFile(targetFilePath);
 });
 
+staticRouter.get('/login', (req: Express.Request, res: Express.Response) => {
+    const targetFilePath = path.join(publicPath, "/login.html");
+    res.sendFile(targetFilePath);
+});
+
 export {staticRouter} ;
 
