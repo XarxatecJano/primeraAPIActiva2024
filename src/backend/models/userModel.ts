@@ -13,14 +13,20 @@ export async function saveNewUser(user:User):Promise<QueryResult>{
    
 }
 
-export async function getUsers():Promise<any>{  
+export async function getUsers():Promise<QueryResult>{  
     const queryString = `SELECT * FROM "user"`;
     const result = await pool.query(queryString);
     return result;
 }
 
-export async function findUserById(id:string):Promise<any>{
+export async function findUserById(id:string):Promise<QueryResult>{ 
     const queryString = `SELECT * FROM "user" WHERE "id" = ${id}`;
+    const result = await pool.query(queryString);
+    return result;
+}
+
+export async function findUserByUsername(username:string):Promise<QueryResult>{ 
+    const queryString = `SELECT * FROM "user" WHERE "userName" = '${username}'`;
     const result = await pool.query(queryString);
     return result;
 }

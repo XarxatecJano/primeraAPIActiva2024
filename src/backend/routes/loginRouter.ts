@@ -1,9 +1,13 @@
 import Express from "express";
+import { LoginUser } from "../types/LoginUser.js";
+import { userLogin } from "../controllers/loginController.js";
 
 const loginRouter = Express.Router();
 
-loginRouter.post('/', (req: Express.Request, res: Express.Response) => {
-  
+loginRouter.post('/', async (req: Express.Request, res: Express.Response) => {
+  const user: LoginUser = {userName: req.body.username, password: req.body.password};
+  const result = await userLogin(user);
+  res.json(result);
 });
 
 export {loginRouter};
