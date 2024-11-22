@@ -4,6 +4,7 @@ import { staticRouter } from './routes/staticRouter.js';
 import apiRouter from './routes/apiRouter.js';
 import methodOverride from 'method-override';
 import path from 'path';
+import { loginRouter } from './routes/loginRouter.js';
 
 const app = Express();
 const port = 3000;
@@ -24,6 +25,7 @@ app.use(methodOverride((req:Express.Request, res:Express.Response)=> {
 }));
 
 app.use("/", staticRouter);
+app.use("/login", loginRouter);
 app.use("/api/v1/", apiRouter);
 
 app.listen(port, () => {
