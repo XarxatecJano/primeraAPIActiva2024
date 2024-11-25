@@ -5,7 +5,7 @@ import { LoginResult } from '../types/LoginResult.js';
 
 
 
-export async function userLogin(user: LoginUser): Promise<any>{
+export async function userLogin(user: LoginUser): Promise<LoginResult>{//TO-DO: hacerlo más limpio
     const result:LoginResult = {
         success: false,
         message: 'Error desconocido',
@@ -22,6 +22,7 @@ export async function userLogin(user: LoginUser): Promise<any>{
                 result.message = 'Usuario encontrado';
                 result.statusCode = 200;
                 result.data = userData.rows;
+             
             } else {
                 result.message = 'Contraseña incorrecta';
                 result.statusCode = 401;
