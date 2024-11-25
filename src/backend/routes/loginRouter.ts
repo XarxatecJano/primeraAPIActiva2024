@@ -8,7 +8,10 @@ loginRouter.post('/', async (req: Express.Request, res: Express.Response) => {
   const user: LoginUser = {userName: req.body.username, password: req.body.password};
   const result = await userLogin(user);
   if (result.success) {
-    req.session.userName = user.userName;
+    if (result.data?.[0] && 'role' in result.data[0]) {
+      req.session.userName = user.userName;
+      req.session.role = result.data[0].role as string;
+    }
   }
   res.json(result);
 });
