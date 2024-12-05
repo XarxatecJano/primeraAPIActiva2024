@@ -5,6 +5,7 @@ import { validateNumericParams } from '../middlewares/validateNumericParams.js';
 import { ApiResult } from '../types/ApiResult.js';
 import { isLoggedIn } from '../middlewares/isLoggedIn.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
+import { baseURL } from '../config/configBaseURL.js';
 
 const userRouter = Express.Router();
 
@@ -33,7 +34,7 @@ userRouter.put("/:id", isLoggedIn, validateNumericParams, async (req: Express.Re
   const user: User = {id: req.params.id, userName: req.body.username, name: req.body.name, first_surname: req.body.surname, email: req.body.email, password: req.body.password};
   const result: ApiResult = await updateUser(user);
   if (result.statusCode==204){
-    res.redirect("http://localhost:3000/usersManagement.html");
+    res.redirect(`${baseURL}/usersManagement.html`);
   } else {
     res.status(result.statusCode).json({message: result.message});
   }

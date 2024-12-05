@@ -3,6 +3,7 @@ import path from 'path';
 import argon2 from 'argon2';
 
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -13,4 +14,6 @@ const argon2Config = {
 }
 const publicPath = path.join(__dirname, '../../public');  
 
-export { publicPath, __dirname, argon2Config };
+
+
+export { publicPath, __dirname, argon2Config};

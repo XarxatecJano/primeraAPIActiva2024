@@ -5,6 +5,7 @@ import { validateNumericParams } from '../middlewares/validateNumericParams.js';
 import { isLoggedIn } from '../middlewares/isLoggedIn.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
 import { generateJwt } from '../utils/generateJwt.js';
+import { baseURL } from '../config/configBaseURL.js';
 
 const staticRouter = Express.Router();
 
@@ -28,6 +29,12 @@ staticRouter.get('/login', (req: Express.Request, res: Express.Response) => {
     req.session.token = token;
     const targetFilePath = path.join(publicPath, "/login.html");
     res.sendFile(targetFilePath);
+});
+
+staticRouter.get('/baseURL', (req, res) => {
+    res.json({
+        header: baseURL
+    });
 });
 
 export {staticRouter} ;
